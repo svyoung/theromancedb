@@ -1,0 +1,26 @@
+body {
+    background: #f1f1f1;
+    font-family: 'Roboto', sans-serif;
+}
+
+#root {
+    padding-top: 80px;
+}
+
+header#header {
+    height: 80px;
+    background: #282828;
+    color: #ffffff;
+    position: fixed;
+    display: block;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#add-author-container {
+    padding-top: 30px;
+}
+#add-author-container select {
+    max-width: 200px;
+}
