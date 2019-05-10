@@ -16,6 +16,7 @@ header#header {
     width: 100%;
     top: 0;
     left: 0;
+    z-index: 2000;
 }
 
 #add-author-container {
@@ -23,4 +24,24 @@ header#header {
 }
 #add-author-container select {
     max-width: 200px;
+}
+
+ul.author-list-container {
+    position: absolute;
+    z-index: 100;
+    display: block;
+    width: 94%;
+    list-style-type: none;
+    padding-left: 0;
+}
+ul.author-list-container li {
+    padding: 5px 10px;
+    background: #ffffff;
+    cursor: pointer;
+    border-bottom: 1px solid #eaeaea;
+    border-right: 1px solid #eaeaea;
+    border-left: 1px solid #eaeaea;
+}
+ul.author-list-container li:hover {
+    background: #eaeaea;
 }

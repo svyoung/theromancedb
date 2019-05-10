@@ -11,19 +11,24 @@ class AddAuthor extends React.Component {
         let emptyState = {
             author: {
                 first_name : {
-                    value: ''
+                    value: '',
+                    required: true
                 },
                 last_name : {
-                    value: ''
+                    value: '',
+                    required: true
                 },
                 image_url : {
-                    value: ''
+                    value: '',
+                    required: false
                 },
                 bio : {
-                    value: ''
+                    value: '',
+                    required: false
                 },
                 gender: {
-                    value: 'F'
+                    value: 'F',
+                    required: true
                 }
             }
         };
@@ -67,30 +72,30 @@ class AddAuthor extends React.Component {
                 <h1>Add Author</h1>
                 <div className="form-group row">
                     <div className="form-group col">
-                        <label htmlFor="first_name"></label>
-                        <input type="text" className="form-control form-control-lg" name="first_name" placeholder="First name" value={author.first_name.value} onChange={this.changeHandler.bind(this)} />
+                        <label htmlFor="first_name">Firt Name</label>
+                        <input type="text" className="form-control form-control-lg" name="first_name" placeholder="First name" value={author.first_name.value} onChange={this.changeHandler.bind(this)} required={author.first_name.required} />
                     </div>
                     <div className="form-group col">
-                        <label htmlFor="last_name"></label>
-                        <input type="text" className="form-control form-control-lg" name="last_name" placeholder="Last name" value={author.last_name.value} onChange={this.changeHandler.bind(this)}/>
-                    </div>
-                </div>
-                <div className="form-group row">
-                    <div className="form-group col">
-                        <label htmlFor="image_url"></label>
-                        <input type="text" className="form-control form-control-lg" name="image_url" placeholder="Image URL" value={author.image_url.value} onChange={this.changeHandler.bind(this)} />
+                        <label htmlFor="last_name">Last Name</label>
+                        <input type="text" className="form-control form-control-lg" name="last_name" placeholder="Last name" value={author.last_name.value} onChange={this.changeHandler.bind(this)} required={author.last_name.required}/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <div className="form-group col">
-                        <label htmlFor="bio"></label>
-                        <textarea className="form-control form-control-lg" type="textarea" name="bio" onChange={this.changeHandler.bind(this)} value={author.bio.value}></textarea>
+                        <label htmlFor="image_url">Author Image URL</label>
+                        <input type="text" className="form-control form-control-lg" name="image_url" placeholder="Image URL" value={author.image_url.value} onChange={this.changeHandler.bind(this)} required={author.image_url.required} />
                     </div>
                 </div>
                 <div className="form-group row">
                     <div className="form-group col">
-                        <label htmlFor="gender"></label>
-                        <select name="gender"  className="form-control form-control-lg" value={author.gender.value} onChange={this.changeHandler.bind(this)}>
+                        <label htmlFor="bio">Biography</label>
+                        <textarea className="form-control form-control-lg" name="bio" onChange={this.changeHandler.bind(this)} value={author.bio.value} required={author.bio.required} />
+                    </div>
+                </div>
+                <div className="form-group row">
+                    <div className="form-group col">
+                        <label htmlFor="gender">Gender</label>
+                        <select name="gender"  className="form-control form-control-lg" value={author.gender.value} onChange={this.changeHandler.bind(this)} required={author.gender.required} >
                             <option value="F">Female</option>
                             <option value="M">Male</option>
                         </select>

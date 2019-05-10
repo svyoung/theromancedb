@@ -8,6 +8,7 @@ use App\Entity\Author;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthorController extends AbstractController
 {
@@ -23,6 +24,7 @@ class AuthorController extends AbstractController
 
     /**
      * @Route("/add-author", name="add_author", methods={"POST"})
+     * Add author to database list
      */
     public function addAuthor(Request $request) {
 
@@ -47,5 +49,18 @@ class AuthorController extends AbstractController
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
+    }
+
+    /**
+     * @Route("/search-author-name", name="search_author_name", methods={"POST"})
+     * Search author by name
+     */
+    public function searchAuthorName(Request $request) {
+        $request = json_decode($request->getContent(), true);
+        $query = $this->getDoctrine()->getRepository(Author::class)
+            ->searchAuthorByName($request);
+        $query = json_decode(json_encode($query), true);
+
+        return new JsonResponse($query);
     }
 }
