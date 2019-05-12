@@ -72,7 +72,7 @@ class AddAuthor extends React.Component {
                 <h1>Add Author</h1>
                 <div className="form-group row">
                     <div className="form-group col">
-                        <label htmlFor="first_name">Firt Name</label>
+                        <label htmlFor="first_name">First Name</label>
                         <input type="text" className="form-control form-control-lg" name="first_name" placeholder="First name" value={author.first_name.value} onChange={this.changeHandler.bind(this)} required={author.first_name.required} />
                     </div>
                     <div className="form-group col">
@@ -102,8 +102,8 @@ class AddAuthor extends React.Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="button" className="submit-author" onClick={this.submitHandler.bind(this)}>Submit</button>
-                    <button type="button" className="submit--add-author" onClick={this.submitAddHandler.bind(this)}>Submit and Add Another AUthor</button>
+                    <button type="button" className="submit-author primary" onClick={this.submitHandler.bind(this)}>Submit</button>
+                    {/*<button type="button" className="submit-add-author secondary" onClick={this.submitAddHandler.bind(this)}>Submit and Add Another AUthor</button>*/}
                 </div>
             </div>
         )

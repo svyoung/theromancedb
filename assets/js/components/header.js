@@ -5,7 +5,7 @@ class Header extends React.Component {
     render() {
         return (
             <header id="header">
-                Header
+                <a className="trdb_logo" href="/"></a>
             </header>
         )
     }

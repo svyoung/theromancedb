@@ -34,10 +34,10 @@ class AuthorController extends AbstractController
         date_default_timezone_set('America/Los_Angeles');
 
         $author = new Author();
-        $author->setFirstName($request['first_name']['value']);
-        $author->setLastName($request['last_name']['value']);
+        $author->setFirstName(trim($request['first_name']['value']));
+        $author->setLastName(trim($request['last_name']['value']));
         $author->setGender($request['gender']['value']);
-        $author->setImageUrl($request['image_url']['value']);
+        $author->setImageUrl(trim($request['image_url']['value']));
         $author->setBio($request['bio']['value']);
         $author->setModifiedDate(new \DateTime('@'.strtotime('now')));
 

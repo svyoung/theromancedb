@@ -26,6 +26,7 @@ class AuthorRepository extends ServiceEntityRepository
             ->setParameter('val', $value.'%')
             ->select('a.first_name, a.last_name, a.id')
             ->orderBy('a.first_name', 'ASC')
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
     }

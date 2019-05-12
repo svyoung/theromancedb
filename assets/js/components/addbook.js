@@ -38,6 +38,14 @@ class AddBook extends React.Component {
                     value: '',
                     required: true
                 },
+                amzn_url: {
+                    value: '',
+                    required: false
+                },
+                gr_url: {
+                  value: '',
+                  required: false
+                },
                 rating: {
                     value: '',
                     required: false
@@ -55,10 +63,7 @@ class AddBook extends React.Component {
     }
 
     changeHandler(e) {
-        const name = e.target.name;
-        const value = e.target.value;
-
-        let book_array = this.state.book;
+        let name = e.target.name, value = e.target.value, book_array = this.state.book;
         book_array[name] = {value : value};
 
         this.setState({
@@ -66,80 +71,88 @@ class AddBook extends React.Component {
         });
     }
 
-    changeGetAuthor(e) {
-        const val = e.target.value;
-        this.setState({
-            author_name: val
-        });
+    // retrieving list of authors or publishers from database with async endpoints
+    changeGetData(e) {
+        const val = e.target.value, isPublisher = !!e.target.dataset['isPublisher'];
+        let endpoint, payload;
+        if(isPublisher) {
+            this.setState({publisher_name: val});
+            endpoint = '/search-publisher-name';
+            payload = {
+                search: 'publisher_name',
+                list: 'publishers_list'
+            };
+        } else {
+            this.setState({author_name: val});
+            endpoint = '/search-author-name';
+            payload = {
+                search: 'author_name',
+                list: 'authors_list'
+            };
+        }
 
         setTimeout(()=> {
             if(val === '') {
-                this.setState({authors_list: []})
+                this.setState({[payload.list]: []});
             } else if(val.length > 2) {
-                fetch('/search-author-name', {
-                    method: "POST",
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(this.state.author_name)
-                })
-                    .then(response => response.json())
-                    .then(data => this.setState({authors_list: data}));
-            }
-        }, 500);
-
-    }
-
-    changeGetPublisher(e) {
-        const val = e.target.value;
-        this.setState({
-            publisher_name: val
-        });
-
-        setTimeout(()=> {
-            if(val === '') {
-                this.setState({publishers_list: []})
-            } else if(val.length > 2) {
-                fetch('/search-publisher-name', {
-                    method: "POST",
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(this.state.publisher_name)
-                })
-                    .then(response => response.json())
-                    .then(data => this.setState({publishers_list: data}));
+                this.fetchData(endpoint, payload);
             }
         }, 500);
     }
 
-    selectAuthor(author_id, author_name) {
-        let book_arr = this.state.book;
-        book_arr['author_id']['value'] = author_id;
-        this.setState({
-            book: book_arr,
-            author_name: author_name
-        });
-        this.setState({authors_list: []})
-    }
-
-    selectPublisher(publisher_id, publisher_name) {
-        let book_arr = this.state.book;
-        book_arr['publisher_id']['value'] = publisher_id;
-        this.setState({
-            book: book_arr,
-            publisher_name: publisher_name
-        });
-        this.setState({publishers_list: []})
-    }
-
-    submitHandler() {
-        fetch('/add-author', {
+    fetchData(endpoint, payload) {
+        fetch(endpoint, {
             method: "POST",
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(this.state.author)
+            body: JSON.stringify(this.state[payload.search])
+        })
+            .then(response => response.json())
+            .then(data => this.setState({[payload.list]: data}))
+            .catch(err => console.log(err.message));
+    }
+
+    // selecting from list of authors or publishers
+    // to enter in author_id or publisher_id into book array payload
+    selectData(e) {
+        const name = e.target.dataset['name'],
+            nameVal = e.target.dataset['nameValue'],
+            idVal = e.target.dataset['idValue'],
+            isPublisher = !!e.target.dataset['publisherId'];
+
+        let book_arr = this.state.book, keyVal;
+        if(isPublisher) {
+            keyVal = {
+                id: 'publisher_id',
+                list: 'publishers_list'
+            };
+        } else {
+            keyVal = {
+                id: 'author_id',
+                list: 'authors_list'
+            };
+        }
+
+        book_arr[keyVal.id]['value'] = idVal;
+        this.setState({
+            book: book_arr,
+            [name]: nameVal,
+            [keyVal.list]: []
+        })
+    }
+
+    // adding entry to book db via async
+    // TODO: handle result sets
+    submitHandler() {
+        //TODO: REQUIRED FIELDS ERROR HANDLING
+
+        fetch('/add-book', {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(this.state.book)
         })
             .then((result) => result.json())
             .then((data) => { console.log('data is ' + data); })
@@ -161,16 +174,17 @@ class AddBook extends React.Component {
                 <div className="form-group row" id="author-input">
                     <div className="form-group col">
                         <label htmlFor="author_name">Author</label>
-                        <input type="text" className="form-control form-control-lg" name="image_url" placeholder="Author" value={author_name} onChange={this.changeGetAuthor.bind(this)} required={book.author_id.required}/>
+                        <input type="text" className="form-control form-control-lg" name="author_name" placeholder="Author" data-is-author={true} value={author_name} onChange={this.changeGetData.bind(this)} required={book.author_id.required}/>
+                        <input type="hidden" name="author_id" value={book.author_id.value} required={book.author_id.required}/>
                         <ul className="author-list-container">
                         {authors_list.map(author =>
-                            <li key={author.id} className="author-item" data-author-id={author.id} onClick={this.selectAuthor.bind(this, author.id, `${author.first_name} ${author.last_name}`)}>{author.first_name} {author.last_name}</li>
+                            <li key={author.id} className="author-item" data-id-value={author.id} data-name="author_name" data-name-value={`${author.first_name} ${author.last_name}`} onClick={this.selectData.bind(this)}>{author.first_name} {author.last_name}</li>
                         )}
                         </ul>
                     </div>
                     <div className="form-group col">
                         <label htmlFor="image_url">Book Image URL</label>
-                        <input type="text" className="form-control form-control-lg" name="image_url" placeholder="Image URL" value={book.image_url.value} onChange={this.changeGetAuthor.bind(this)} required={book.image_url.required}/>
+                        <input type="text" className="form-control form-control-lg" name="image_url" placeholder="Image URL" value={book.image_url.value} onChange={this.changeHandler.bind(this)} required={book.image_url.required}/>
                     </div>
                 </div>
                 <div className="form-group row">
@@ -205,29 +219,39 @@ class AddBook extends React.Component {
             <div className="form-group row">
                 <div className="form-group col">
                     <label htmlFor="publisher_name">Publisher</label>
-                    <input type="text" className="form-control form-control-lg" name="publisher_name" placeholder="Publisher" value={publisher_name} onChange={this.changeGetPublisher.bind(this)} required={book.publisher_id.required} />
-                    <div className="author-list-container">
+                    <input type="text" className="form-control form-control-lg" name="publisher_name" placeholder="Publisher" data-is-publisher={true} value={publisher_name} onChange={this.changeGetData.bind(this)} required={book.publisher_id.required} />
+                    <ul className="publisher-list-container">
                         {publishers_list.map(publisher =>
-                            <div key={publisher.id} className="publisher-item" data-publisher-id={publisher.id} onClick={this.selectPublisher.bind(this, publisher.id, publisher.name)}>{publisher.name}</div>
+                            <li key={publisher.id} className="publisher-item" data-id-value={publisher.id} data-name="publisher_name" data-name-value={publisher.name} data-publisher-id={publisher.id} onClick={this.selectData.bind(this)}>{publisher.name}</li>
                         )}
-                    </div>
+                    </ul>
                 </div>
             </div>
-                <div className="form-group row">
-                    <div className="form-group col">
-                        <label htmlFor="rating">Rating</label>
-                        <input className="form-control form-control-lg" type="text" name="rating" onChange={this.changeHandler.bind(this)} value={book.rating.value} required={book.rating.required}/>
-                    </div>
-                    <div className="form-group col">
-                        <label htmlFor="page_count">Page Count</label>
-                        <input className="form-control form-control-lg" type="text" name="page_count" onChange={this.changeHandler.bind(this)} value={book.page_count.value} required={book.page_count.required}/>
-                    </div>
+            <div className="form-group row">
+                <div className="form-group col">
+                    <label htmlFor="rating">Amazon URL</label>
+                    <input className="form-control form-control-lg" type="text" name="amzn_url" onChange={this.changeHandler.bind(this)} value={book.amzn_url.value} required={book.amzn_url.required}/>
                 </div>
-                <div className="form-group">
-                    <button type="button" className="submit-book" onClick={this.submitHandler.bind(this)}>Submit</button>
-                    {/*<button type="button" className="submit--add-author" onClick={this.submitAddHandler.bind(this)}>Submit and Add Another AUthor</button>*/}
+                <div className="form-group col">
+                    <label htmlFor="page_count">Goodreads URL</label>
+                    <input className="form-control form-control-lg" type="text" name="gr_url" onChange={this.changeHandler.bind(this)} value={book.gr_url.value} required={book.gr_url.required}/>
                 </div>
             </div>
+            <div className="form-group row">
+                <div className="form-group col">
+                    <label htmlFor="rating">Rating</label>
+                    <input className="form-control form-control-lg" type="text" name="rating" onChange={this.changeHandler.bind(this)} value={book.rating.value} required={book.rating.required}/>
+                </div>
+                <div className="form-group col">
+                    <label htmlFor="page_count">Page Count</label>
+                    <input className="form-control form-control-lg" type="text" name="page_count" onChange={this.changeHandler.bind(this)} value={book.page_count.value} required={book.page_count.required}/>
+                </div>
+            </div>
+            <div className="form-group">
+                <button type="button" className="submit-book primary" onClick={this.submitHandler.bind(this)}>Submit</button>
+                {/*<button type="button" className="submit--add-author" onClick={this.submitAddHandler.bind(this)}>Submit and Add Another AUthor</button>*/}
+            </div>
+        </div>
         )
     }
 }

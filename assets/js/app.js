@@ -16,6 +16,7 @@ import ReactDOM from 'react-dom';
 import Header from './components/header';
 import AddAuthor from './components/addauthor';
 import AddBook from './components/addbook';
+import Footer from './components/footer';
 
 
 class App extends React.Component {
@@ -41,8 +42,9 @@ class App extends React.Component {
         return (
             <div>
                 <Header />
-                {/*<AddAuthor />*/}
+                <AddAuthor />
                 <AddBook />
+                <Footer />
             </div>
         );
     }

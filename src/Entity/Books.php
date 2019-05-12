@@ -82,6 +82,21 @@ class Books
      */
     private $image_url;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $modified_date;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $amzn_url;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $gr_url;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -191,6 +206,42 @@ class Books
     public function setImageUrl(?string $image_url): self
     {
         $this->image_url = $image_url;
+
+        return $this;
+    }
+
+    public function getModifiedDate(): ?\DateTimeInterface
+    {
+        return $this->modified_date;
+    }
+
+    public function setModifiedDate(\DateTimeInterface $modified_date): self
+    {
+        $this->modified_date = $modified_date;
+
+        return $this;
+    }
+
+    public function getAmznUrl(): ?string
+    {
+        return $this->amzn_url;
+    }
+
+    public function setAmznUrl(?string $amzn_url): self
+    {
+        $this->amzn_url = $amzn_url;
+
+        return $this;
+    }
+
+    public function getGrUrl(): ?string
+    {
+        return $this->gr_url;
+    }
+
+    public function setGrUrl(?string $gr_url): self
+    {
+        $this->gr_url = $gr_url;
 
         return $this;
     }
