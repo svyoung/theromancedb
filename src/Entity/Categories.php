@@ -28,22 +28,5 @@ class Categories
      */
     private $category;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getCategory(): ?string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
 
 }

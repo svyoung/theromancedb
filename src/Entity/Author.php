@@ -5,121 +5,63 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\AuthorRepository")
+ * Author
+ *
+ * @ORM\Table(name="author")
+ * @ORM\Entity
  */
 class Author
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=false)
      */
-    private $first_name;
+    private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=false)
      */
-    private $last_name;
+    private $lastName;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="image_url", type="text", length=0, nullable=true)
      */
-    private $image_url;
+    private $imageUrl;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="bio", type="text", length=0, nullable=true)
      */
     private $bio;
 
     /**
-     * @ORM\Column(type="string", length=1)
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="string", length=1, nullable=false)
      */
-    private $gender = 'F';
+    private $gender;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modified_date", type="datetime", nullable=false)
      */
-    private $modified_date;
+    private $modifiedDate;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
-    public function getFirstName(): ?string
-    {
-        return $this->first_name;
-    }
-
-    public function setFirstName(string $first_name): self
-    {
-        $this->first_name = $first_name;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->last_name;
-    }
-
-    public function setLastName(string $last_name): self
-    {
-        $this->last_name = $last_name;
-
-        return $this;
-    }
-
-    public function getImageUrl(): ?string
-    {
-        return $this->image_url;
-    }
-
-    public function setImageUrl(?string $image_url): self
-    {
-        $this->image_url = $image_url;
-
-        return $this;
-    }
-
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(?string $bio): self
-    {
-        $this->bio = $bio;
-
-        return $this;
-    }
-
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
-    public function setGender(string $gender): self
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    public function getModifiedDate(): ?\DateTimeInterface
-    {
-        return $this->modified_date;
-    }
-
-    public function setModifiedDate(\DateTimeInterface $modified_date): self
-    {
-        $this->modified_date = $modified_date;
-
-        return $this;
-    }
 }

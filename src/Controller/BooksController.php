@@ -30,7 +30,6 @@ class BooksController extends AbstractController
      * Add book to database list
      */
     public function addBook(Request $request) {
-
         $request = json_decode($request->getContent(), true);
         $em = $this->getDoctrine()->getManager();
 
@@ -59,30 +58,42 @@ class BooksController extends AbstractController
     }
 
     /**
+     * @Route("/getFeaturedBooks", name="get_featured_books", methods={"GET"})
+     */
+    public function getFeaturedBooks() {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->getRepository(Books::class)
+            ->findAll();
+
+//        $res = json_decode(json_encode($query), true);
+//        $res = new JsonResponse();
+
+        return $query;
+//        var_dump($query);
+//        exit();
+    }
+
+    /**
      * @Route("/getBooksByAuthorFromGRAPI", name="get_books_by_author_from_gr_apo", methods={"GET"})
      * Get books by authors name searching through Goodread's API
      */
-    public function getBooksByAuthorFromGRAPI() {
-        $api_key = 'GP9rnuaGDy1vAgXU8urvg';
-        $api_url = 'https://www.goodreads.com/search/index.xml';
-
-        $client = new Client(['base_uri' => $api_url,'verify' => false]);
-//        $client->setDefaultOption('verify', false);
-        $req = $client->request('GET', '', [
-            'headers' => ['Accept' => 'application/xml'],
-            'query' => [
-                'key' => $api_key,
-                'q' => 'Maya Banks'
-            ]
-        ]);
-//        $res = $req->send();
-        $res = $req->getBody()->getContents();
-
-
-
-        var_dump($res);
-        exit();
-
-
-    }
+//    public function getBooksByAuthorFromGRAPI() {
+//        $api_key = 'GP9rnuaGDy1vAgXU8urvg';
+//        $api_url = 'https://www.goodreads.com/search/index.xml';
+//
+//        $client = new Client(['base_uri' => $api_url,'verify' => false]);
+//        $req = $client->request('GET', '', [
+//            'headers' => ['Accept' => 'application/xml'],
+//            'query' => [
+//                'key' => $api_key,
+//                'q' => 'Maya Banks'
+//            ]
+//        ]);
+//
+//        $res = $req->getBody()->getContents();
+//
+//        var_dump($res);
+//        exit();
+//    }
 }
